@@ -146,11 +146,6 @@ class Downloader {
 					throw err;
 				} finally {
 					writable.releaseLock();
-
-					try {
-					await file.writable.close();
-					} catch (_) { }
-					
 					reader.releaseLock?.();
 				}
 			}
@@ -161,6 +156,10 @@ class Downloader {
 				throw new Error(`Request to server failed: ${err}`);
 			}
 		}
+
+		try {
+			await file.writable.close();
+		} catch (_) { }
 
 		const getFileSize = await this.getFileStats(this.destinationPath);
 		if (getFileSize?.size === this.totalSize) return true;
