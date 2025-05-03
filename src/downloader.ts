@@ -146,6 +146,11 @@ class Downloader {
 					throw err;
 				} finally {
 					writable.releaseLock();
+
+					try {
+					await file.writable.close();
+					} catch (_) { }
+					
 					reader.releaseLock?.();
 				}
 			}
